@@ -31,12 +31,12 @@ require_once 'views_logs.load.php';
 
 //TAB 6 - LOGS
 echo '
-    <input type="text" id="type_log_displayed" />
+    <input type="hidden" id="type_log_displayed" />
     <div id="tabs-6">
         <div id="radio_log">
             <input type="radio" id="radio60" name="radio" onclick="manage_div_display(\'tab6_0\'); loadTable(\'t_connections\');" /><label for="radio60">'.$txt['connections'].'</label>
             <input type="radio" id="radio61" name="radio" onclick="manage_div_display(\'tab6_1\'); loadTable(\'t_errors\');" /><label for="radio61">'.$txt['errors'].'</label>
-            <!--<input type="radio" id="radio62" name="radio" onclick="manage_div_display(\'tab6_2\'); loadTable(\'t_access\');" /><label for="radio62">'.$txt['at_shown'].'</label>-->
+            <input type="radio" id="radio62" name="radio" onclick="manage_div_display(\'tab6_2\'); loadTable(\'t_access\');" /><label for="radio62">'.$txt['at_shown'].'</label>
             <input type="radio" id="radio63" name="radio" onclick="manage_div_display(\'tab6_3\'); loadTable(\'t_copy\');" /><label for="radio63">'.$txt['at_copy'].'</label>
             <input type="radio" id="radio64" name="radio" onclick="manage_div_display(\'tab6_4\'); loadTable(\'t_admin\');" /><label for="radio64">'.$txt['admin'].'</label>
             <input type="radio" id="radio65" name="radio" onclick="manage_div_display(\'tab6_5\'); loadTable(\'t_items\');" /><label for="radio65">'.$txt['items'].'</label>
@@ -71,13 +71,12 @@ echo '
             </div>
         </div>
         <div id="tab6_2" style="display:none;margin-top:30px;">
-            <div style="margin:10px auto 25px auto;min-height:250px;" id="t_accesss_page">
-                <table id="t_accesss" cellspacing="0" cellpadding="5" width="100%">
+            <div style="margin:10px auto 25px auto;min-height:250px;" id="t_access_page">
+                <table id="t_access" cellspacing="0" cellpadding="5" width="100%">
                     <thead><tr>
                         <th style="width-max:38px;">'.$txt['date'].'</th>
-                        <th style="width:40%;">'.$txt['user'].'</th>
-                        <th style="width:20%;">'.$txt['role'].'</th>
-                        <th style="width:20%;">'.$txt['login_time'].'</th>
+                        <th style="width:40%;">'.$txt['label'].'</th>
+                        <th style="width:20%;">'.$txt['user'].'</th>
                     </tr></thead>
                     <tbody>
                         <tr><td></td></tr>
@@ -90,9 +89,8 @@ echo '
                 <table id="t_copy" cellspacing="0" cellpadding="5" width="100%">
                     <thead><tr>
                         <th style="width-max:38px;">'.$txt['date'].'</th>
-                        <th style="width:40%;">'.$txt['user'].'</th>
-                        <th style="width:20%;">'.$txt['role'].'</th>
-                        <th style="width:20%;">'.$txt['login_time'].'</th>
+                        <th style="width:40%;">'.$txt['label'].'</th>
+                        <th style="width:20%;">'.$txt['user'].'</th>
                     </tr></thead>
                     <tbody>
                         <tr><td></td></tr>
@@ -121,7 +119,7 @@ echo '
                     <thead><tr>
                         <th style="width-max:38px;">'.$txt['date'].'</th>
                         <th style="width:40%;">'.$txt['user'].'</th>
-                        <th style="width:20%;">'.$txt['role'].'</th>
+                        <th style="width:20%;">'.$txt['label'].'</th>
                         <th style="width:20%;">'.$txt['at_personnel'].'</th>
                     </tr></thead>
                     <tbody>

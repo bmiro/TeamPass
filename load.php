@@ -1093,7 +1093,7 @@ if (!isset($_GET['page']) && isset($_SESSION['key'])) {
             "sources/main.queries.php",
             {
                type    : "store_personal_saltkey",
-               sk    : $.jCryption.encrypt($("#input_personal_saltkey").val(), sessionStorage.password)
+               sk    : $.jCryption.encrypt("{\"psk\":\""+sanitizeString($("#input_personal_saltkey").val())+"\"}", sessionStorage.password)
             },
             function(data) {
                 if ($("#input_personal_saltkey").val() != "") {

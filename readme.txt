@@ -80,6 +80,8 @@ folder
  #320 - Enabling LDAP prevents local admin login
  #317 - server expected extensions are tested
  #318 - Upgrade process badly creates sk.php file
+ #348 - Fix for undefined index "isAdministratedByRole"
+ #350 - Fix for Lock and delete user actions don't refresh page
 
 2.1.17
  * New exchange encryption protocol. No key is visible. The channel is 

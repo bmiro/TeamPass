@@ -138,7 +138,7 @@ if (isset($_POST['newtitle'])) {
             // Get through each subfolder
             $folders = $tree->getDescendants($_POST['id'], true);
             foreach ($folders as $folder) {
-                if ($folder->parent_id > 0 && $folder->title != $_SESSION['user_id'] ) {
+                if (($folder->parent_id > 0 || $folder->parent_id == 0) && $folder->title != $_SESSION['user_id'] ) {
                     //Store the deleted folder (recycled bin)
                     $db->queryInsert(
                         'misc',

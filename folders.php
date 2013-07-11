@@ -120,7 +120,7 @@ foreach ($tst as $t) {
                             '.$ident.'<span id="title_'.$t->id.'">'.$t->title.'</span>
                         </td>
                         <td align="center" onclick="open_edit_folder_dialog('.$t->id.')">
-                            <span id="complexite_'.$t->id.'">'.$pwComplexity[$node_data[0]][1].'</span>
+                            <span id="complexite_'.$t->id.'">'.@$pwComplexity[$node_data[0]][1].'</span>
                         </td>
                         <td align="center" onclick="open_edit_folder_dialog('.$t->id.')">
                             <span id="parent_'.$t->id.'">'.$data[0].'</span>

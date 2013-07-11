@@ -437,16 +437,7 @@ function CheckIfItemChanged()
             item_id     : $("#selected_items").val()
         },
         function(data) {
-            try {
-                data = $.parseJSON($.jCryption.decrypt(data, sessionStorage.password));
-            } catch (e) {
-                if (e == "SyntaxError: JSON.parse: unexpected character") {
-                	alert('It seems the encryption channel is broken! Perhaps did you open a new TeamPass ' +
-                		    'page in your Browser. The Items list will now be refreshed.');
-                	InitializePasswordVariable(1);
-                }
-            }
-            //data = $.parseJSON(data);
+            data = $.parseJSON(data);
             if (data.modified == 1) {
                 funcReturned = 1;
             } else {
@@ -721,7 +712,7 @@ function EditerItem()
             '"annonce":"'+annonce+'", "diffusion":"'+diffusion+'", "id":"'+$('#id_item').val()+'", '+
             '"anyone_can_modify":"'+$('#edit_anyone_can_modify:checked').val()+'", "tags":"'+sanitizeString($('#edit_tags').val())+'" ,'+
             '"to_be_deleted":"'+to_be_deleted+'"}';
-
+alert(data);
             //send query
             $.post(
                 "sources/items.queries.php",
@@ -768,7 +759,7 @@ function EditerItem()
                     }
                     //if reload page is needed
                     else if (data.reload_page == "1") {
-                        window.location.href = "index.php?page=items&group="+data.id_tree+"&id="+data.id;
+                        //window.location.href = "index.php?page=items&group="+data.id_tree+"&id="+data.id;
                     } else {
                         //refresh item in list
                         $("#fileclass"+data.id).text($('#edit_label').val());

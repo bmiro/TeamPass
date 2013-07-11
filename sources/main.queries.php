@@ -319,7 +319,8 @@ switch ($_POST['type']) {
                     $_SESSION['my_sk'] = $psk;
                 }
             } elseif (crypt($psk, $data['psk']) != $data['psk']) {
-                echo '[{"value" : "bad_psk"}]';echo $psk." - ".crypt($psk, $data['psk']) ." - ". $data['psk']." - ".bCrypt(htmlspecialchars_decode($psk), COST);
+                echo '[{"value" : "bad_psk"}]';
+                //echo $psk." - ".crypt($psk, $data['psk']) ." - ". $data['psk']." - ".bCrypt(htmlspecialchars_decode($psk), COST);
                 exit;
             }
         }
@@ -837,9 +838,9 @@ switch ($_POST['type']) {
      * Store the personal saltkey
      */
     case "store_personal_saltkey":
-        //$dataReceived = Encryption\Crypt\aesctr::decrypt($_POST['sk'], $_SESSION['encKey'], 256);
-        if ($_POST['sk'] != "**************************") {
-            $_SESSION['my_sk'] = str_replace(" ", "+", urldecode($_POST['sk']));
+        $dataReceived = json_decode(Encryption\Crypt\aesctr::decrypt(urldecode($_POST['sk']), $_SESSION['encKey'], 256), true);
+        if ($dataReceived['psk'] != "**************************") {
+            $_SESSION['my_sk'] = str_replace(" ", "+", urldecode($dataReceived['psk']));
             setcookie(
                 "TeamPass_PFSK_".md5($_SESSION['user_id']),
                 encrypt($_SESSION['my_sk'], ""),

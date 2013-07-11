@@ -67,7 +67,7 @@ echo '
                     <th title="'.$txt['user_action'].'"><img src="includes/images/user-locked.png" /></th>
                     <th title="'.$txt['pw_change'].'"><img src="includes/images/lock__pencil.png" /></th>
                     <th title="'.$txt['email_change'].'"><img src="includes/images/mail.png" /></th>
-                    <th></th>
+                    <th title="'.$txt['logs'].'"><img src="includes/images/log.png" /></th>
                 </tr>
             </thead>
             <tbody>';
@@ -126,8 +126,8 @@ foreach ($rows as $reccord) {
     //Show user only if can be administrated by the adapted Roles manager
     if (
         $_SESSION['is_admin'] ||
-        ($reccord['isAdministratedByRole'] > 0 &&
-        in_array($reccord['isAdministratedByRole'], $_SESSION['user_roles']))
+        ($reccord['IsAdministratedByRole'] > 0 &&
+        in_array($reccord['IsAdministratedByRole'], $_SESSION['user_roles']))
     ) {
         $showUserFolders = true;
     } else {
@@ -180,8 +180,8 @@ foreach ($rows as $reccord) {
                     <td align="center">
                         <div', ($reccord['admin'] == 1) ? ' style="display:none;"':'', '>
                             <div id="list_adminby_'.$reccord['id'].'" style="text-align:center;">
-                                ', isset($reccord['isAdministratedByRole']) && $reccord['isAdministratedByRole'] > 0 ?
-                                $rolesList[$reccord['isAdministratedByRole']]['title']
+                                ', isset($reccord['IsAdministratedByRole']) && $reccord['IsAdministratedByRole'] > 0 ?
+                                $rolesList[$reccord['IsAdministratedByRole']]['title']
                                 :
                                 '<span title="'.$txt['administrators_only'].'">'.$txt['admin_small'].'</span>', '
                             </div>
@@ -237,12 +237,12 @@ foreach ($rows as $reccord) {
                     <td align="center">
                         <input type="checkbox" id="can_create_root_folder_'.$reccord['id'].'" onchange="ChangeUserParm(\''.$reccord['id'].'\',\'can_create_root_folder\')"', $reccord['can_create_root_folder'] == 1 ? 'checked' : '', '', $_SESSION['user_admin'] == 1 ? '':' disabled="disabled"', ' />
                     </td>';
-        /*if (isset($_SESSION['settings']['enable_pf_feature']) && $_SESSION['settings']['enable_pf_feature'] == 1) {
+        if (isset($_SESSION['settings']['enable_pf_feature']) && $_SESSION['settings']['enable_pf_feature'] == 1) {
         echo '
                     <td align="center">
                         <input type="checkbox" id="personal_folder_'.$reccord['id'].'" onchange="ChangeUserParm(\''.$reccord['id'].'\',\'personal_folder\')"', $reccord['personal_folder'] == 1 ? 'checked' : '', '', $_SESSION['user_admin'] == 1 ? '':' disabled="disabled"', ' />
                     </td>';
-        }*/
+        }
         // If user is active, then you could lock it
         // If user is locked, you could delete it
         if ($reccord['disabled'] == 1) {

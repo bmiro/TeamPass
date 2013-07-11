@@ -474,9 +474,10 @@ if (isset($_POST['type'])) {
                     }
 
                     //Get some infos from DB
-                    if (@mysql_fetch_row(mysql_query(
-                        "SELECT valeur FROM ".$_POST['tbl_prefix']."misc
-                        WHERE type='admin' AND intitule = 'utf8_enabled'"))
+                    if (@mysql_fetch_row(
+                            mysql_query("SELECT valeur FROM ".$_POST['tbl_prefix']."misc
+                        WHERE type='admin' AND intitule = 'utf8_enabled'")
+                        )
                     ) {
                         $cpmIsUTF8 = mysql_fetch_row(mysql_query(
                             "SELECT valeur FROM ".$_POST['tbl_prefix']."misc
@@ -754,7 +755,9 @@ if (isset($_POST['type'])) {
                             ('".$elem[0]."', '".$elem[1]."', '".
                             str_replace("'", "", $elem[2])."');"
                         );
-                        if (!$queryRes) break;
+                        if (!$queryRes) {
+                            break;
+                        }
                     } else {
                         // Force update for some settings
                         if ($elem[3] == 1) {
@@ -763,7 +766,9 @@ if (isset($_POST['type'])) {
                                 SET `valeur` = '".$elem[2]."'
                                 WHERE type = '".$elem[0]."' AND intitule = '".$elem[1]."'"
                             );
-                            if (!$queryRes) break;
+                            if (!$queryRes) {
+                                break;
+                            }
                         }
                     }
                 }
@@ -1027,12 +1032,13 @@ if (isset($_POST['type'])) {
                         WHERE item_id=".$reccord['id']
                     ) or die(mysql_error());
                     $itemTags = mysql_fetch_array($itemsRes);
-                    if (!empty($itemTags))
+                    if (!empty($itemTags)) {
                         foreach ($itemTags as $itemTag) {
-                            if (!empty($itemTag['tag']))
+                            if (!empty($itemTag['tag'])) {
                                 $tags .= $itemTag['tag']. " ";
+                            }
                         }
-
+                    }
                     //form id_tree to full foldername
                     $folder = "";
                     $arbo = $tree->getPath($reccord['id_tree'], true);
@@ -1619,8 +1625,7 @@ global \$server, \$user, \$pass, \$database, \$pre, \$db;
 @date_default_timezone_set(\$_SESSION['settings']['timezone']);
 @define('SECUREPATH', '".substr($skFile, 0, strlen($skFile)-7)."');
 require_once \"".$skFile."\";
-@define('COST', '13'); // Don't change this.
-?>"
+@define('COST', '13'); // Don't change this."
                     )
                 );
 

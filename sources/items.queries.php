@@ -73,6 +73,8 @@ if (isset($_POST['type'])) {
         case "new_item":
             // Check KEY and rights
             if ($_POST['key'] != $_SESSION['key'] || $_SESSION['user_read_only'] == true) {
+                //$returnValues = Encryption\Crypt\aesctr::encrypt(json_encode(array("error" => "something_wrong"), JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP), $_SESSION['encKey'], 256);
+                //echo $returnValues;
                 echo encryptReturnedData(array("error" => "something_wrong"));
                 break;
             }
@@ -88,6 +90,9 @@ if (isset($_POST['type'])) {
             if (!empty($pw)) {
                 // Check length
                 if (strlen($pw) > $_SESSION['settings']['pwd_maximum_length']) {
+                    //$returnValues = array("error" => "pw_too_long");
+                    //$returnValues = Encryption\Crypt\aesctr::encrypt(json_encode($returnValues, JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP), $_SESSION['encKey'], 256);
+                    //echo $returnValues;
                     echo encryptReturnedData(array("error" => "pw_too_long"));
                     break;
                 }
@@ -118,6 +123,10 @@ if (isset($_POST['type'])) {
                         $restictedTo = $_SESSION['user_id'];
                     } else {
                         $pw = encrypt($pw);
+                    }
+                    if (empty($pw)) {
+                        echo encryptReturnedData(array("error" => "something_wrong"));
+                        break;
                     }
                     // ADD item
                     $newID = $db->queryInsert(
@@ -295,6 +304,8 @@ if (isset($_POST['type'])) {
                 $returnValues = array("error" => "something_wrong");
             }
             // Encrypt data to return
+            //$returnValues = Encryption\Crypt\aesctr::encrypt(json_encode($returnValues, JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP), $_SESSION['encKey'], 256);
+            //echo $returnValues;
             echo encryptReturnedData($returnValues);
             break;
 
@@ -305,6 +316,8 @@ if (isset($_POST['type'])) {
         case "update_item":
             // Check KEY and rights
             if ($_POST['key'] != $_SESSION['key'] || $_SESSION['user_read_only'] == true) {
+                //$returnValues = Encryption\Crypt\aesctr::encrypt(json_encode(array("error" => "something_wrong"), JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP), $_SESSION['encKey'], 256);
+                //echo $returnValues;
                 echo encryptReturnedData(array("error" => "something_wrong"));
                 break;
             }
@@ -357,6 +370,9 @@ if (isset($_POST['type'])) {
                  ) {
                     // Check length
                     if (strlen($pw) > $_SESSION['settings']['pwd_maximum_length']) {
+                        //$returnValues = array("error" => "pw_too_long");
+                        //$returnValues = Encryption\Crypt\aesctr::encrypt(json_encode($returnValues, JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP), $_SESSION['encKey'], 256);
+                        //echo $returnValues;
                         echo encryptReturnedData(array("error" => "pw_too_long"));
                         break;
                     }
@@ -387,6 +403,10 @@ if (isset($_POST['type'])) {
                     } else {
                         $pw = encrypt($pw);
                     }
+                    if (empty($pw)) {
+                        echo encryptReturnedData(array("error" => "something_wrong"));
+                        break;
+                    }
                     // ---Manage tags
                     // deleting existing tags for this item
                     $db->query("DELETE FROM ".$pre."tags WHERE item_id = '".$dataReceived['id']."'");
@@ -399,7 +419,7 @@ if (isset($_POST['type'])) {
                                 array(
                                     'item_id' => $dataReceived['id'],
                                     'tag' => strtolower($tag)
-                                   )
+                                )
                             );
                         }
                     }
@@ -748,6 +768,8 @@ if (isset($_POST['type'])) {
                         "error" => ""
                        );
                 } else {
+                    //$returnValues = Encryption\Crypt\aesctr::encrypt(json_encode(array("error" => "something_wrong"), JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP), $_POST['key'], 256);
+                    //echo $returnValues;
                     echo encryptReturnedData(array("error" => "something_wrong"));
                     break;
                 }
@@ -755,6 +777,9 @@ if (isset($_POST['type'])) {
                 // an error appears on JSON format
                 $arrData = array("error" => "format");
             }
+            // return data
+            //$returnValues = Encryption\Crypt\aesctr::encrypt(json_encode($arrData, JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP), $_SESSION['encKey'], 256);
+            //echo $returnValues;
             echo encryptReturnedData($arrData);
             break;
 
@@ -882,6 +907,8 @@ if (isset($_POST['type'])) {
             $dataRestored = $db->fetchRow("SELECT COUNT(*) FROM ".$pre."log_items WHERE id_item = '".$_POST['id']."' AND action = 'at_restored'");
             if ($dataDeleted[0] != 0 && $dataDeleted[0] > $dataRestored[0]) {
                 // This item is deleted => exit
+                //$returnValues = Encryption\Crypt\aesctr::encrypt(json_encode(array('show_detail_option' => 2), JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP), $_SESSION['encKey'], 256);
+                //echo $returnValues;
                 echo encryptReturnedData(array('show_detail_option' => 2));
                 break;
             }
@@ -964,7 +991,12 @@ if (isset($_POST['type'])) {
             if (isset($_POST['salt_key_required']) && $_POST['salt_key_required'] == 1 && isset($_POST['salt_key_set']) && $_POST['salt_key_set'] == 1) {
                 $pw = decrypt($dataItem['pw'], mysql_real_escape_string(stripslashes($_SESSION['my_sk'])));
                 if (empty($pw)) {
-                    $pw = decryptOld($dataItem['pw'], mysql_real_escape_string(stripslashes($_SESSION['my_sk'])));
+                    /*if (isset($_SESSION['my_sk_tmp']) && !empty($_SESSION['my_sk_tmp'])) {
+                        $pw = decryptOld($dataItem['pw'], mysql_real_escape_string(stripslashes($_SESSION['my_sk_tmp'])));
+                    }*/
+                    if (empty($pw)) {
+                        $pw = decryptOld($dataItem['pw'], mysql_real_escape_string(stripslashes($_SESSION['my_sk'])));
+                    }
                 }
                 $arrData['edit_item_salt_key'] = 1;
             } else {
@@ -1308,6 +1340,9 @@ if (isset($_POST['type'])) {
             $arrData['timestamp'] = time();
             // print_r($arrData);
             // Encrypt data to return
+            //$returnValues = Encryption\Crypt\aesctr::encrypt(json_encode($arrData, JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP), $_SESSION['encKey'], 256);
+            // return data
+            //echo $returnValues;
             echo encryptReturnedData($arrData);
             break;
 
@@ -1910,7 +1945,6 @@ if (isset($_POST['type'])) {
                         "error" => "no_edition_possible",
                         "error_msg" => $txt['error_no_edition_possible_locked']
                     );
-
                     //echo json_encode($returnValues, JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP);
                     echo encryptReturnedData($returnValues);
                     break;
@@ -1951,11 +1985,9 @@ if (isset($_POST['type'])) {
                 "val" => $data[0],
                 "visibility" => $visibilite,
                 "complexity" => $complexity
-               );
-
+            );
             //echo json_encode($returnValues, JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP);
             echo encryptReturnedData($returnValues);
-
             break;
 
         /*
@@ -1980,6 +2012,8 @@ if (isset($_POST['type'])) {
                 $data = $dataItem['login'];
             }
             // Encrypt data to return
+            //$returnValues = Encryption\Crypt\aesctr::encrypt($data, $_SESSION['encKey'], 256);
+            //echo $returnValues;
             echo encryptReturnedData($data);
             break;
 

@@ -291,6 +291,7 @@ if (!empty($_POST['type'])) {
                        )
                 );
             }
+            echo '[ { "error" : "no" } ]';
             break;
         /**
          * UPDATE EMAIL OF USER

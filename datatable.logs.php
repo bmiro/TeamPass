@@ -1,9 +1,9 @@
 <?php
 /**
  * @file          datatable.users_logged.php
- * @author        Nils Laumaillï¿½
+ * @author        Nils Laumaillé
  * @version       2.1.13
- * @copyright     (c) 2009-2013 Nils Laumaillï¿½
+ * @copyright     (c) 2009-2013 Nils Laumaillé
  * @licensing     GNU AFFERO GPL 3.0
  * @link          http://www.teampass.net
  *
@@ -50,7 +50,7 @@ if (isset($_GET['action']) && $_GET['action'] == "connections") {
         for ($i=0; $i<intval($_GET['iSortingCols']); $i++) {
             if ($_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true") {
                 $sOrder .= $aColumns[ intval($_GET['iSortCol_'.$i]) ]."
-                    ".mysql_real_escape_string($_GET['sSortDir_'.$i]) .", ";
+                        ".mysql_real_escape_string($_GET['sSortDir_'.$i]) .", ";
             }
         }
 
@@ -74,10 +74,10 @@ if (isset($_GET['action']) && $_GET['action'] == "connections") {
         }
         $sWhere = substr_replace($sWhere, "", -3).") ";
     }
-
-    $sql = "SELECT l.date as date, l.label as label, l.qui as who, u.login as login
-            FROM ".$pre."log_system as l
-            INNER JOIN ".$pre."users as u ON (l.qui=u.id)
+    
+    $sql = "SELECT l.date AS date, l.label AS label, l.qui AS who, u.login AS login
+            FROM ".$pre."log_system AS l
+            INNER JOIN ".$pre."users AS u ON (l.qui=u.id)
             $sWhere
             $sOrder
             $sLimit";
@@ -95,8 +95,8 @@ if (isset($_GET['action']) && $_GET['action'] == "connections") {
     /* Total data set length */
     $sql_c = "
             SELECT COUNT(date)
-            FROM ".$pre."log_system as l
-            INNER JOIN ".$pre."users as u ON (l.qui=u.id)
+            FROM ".$pre."log_system AS l
+            INNER JOIN ".$pre."users AS u ON (l.qui=u.id)
             WHERE l.type = 'user_connection'
     ";
     $rResultTotal = mysql_query($sql_c) or die(mysql_error());
@@ -109,25 +109,28 @@ if (isset($_GET['action']) && $_GET['action'] == "connections") {
     $sOutput = '{';
     $sOutput .= '"sEcho": '.intval($_GET['sEcho']).', ';
     $sOutput .= '"iTotalRecords": '.$iTotal.', ';
-    $sOutput .= '"iTotalDisplayRecords": '.$iTotal.', ';
+    $sOutput .= '"iTotalDisplayRecords": '.$iFilteredTotal.', ';
     $sOutput .= '"aaData": ';
 
     $rows = $db->fetchAllArray($sql);
     if (count($rows) > 0) {
         $sOutput .= '[';
     }
-    foreach ($rows as $reccord) {
+    foreach ($rows AS $reccord) {
         $sOutput .= "[";
 
         //col1
-        $sOutput .= '"'.date($_SESSION['settings']['date_format']." ".$_SESSION['settings']['time_format'], $reccord['date']).'", ';
+        $sOutput .= '"'.$reccord['l.date'].'", ';
 
         //col2
-        $sOutput .= '"'.htmlspecialchars(stripslashes($reccord['label']), ENT_QUOTES).'", ';
+        $sOutput .= '"'.htmlspecialchars(stripslashes($reccord['l.label']), ENT_QUOTES).'", ';
 
         //col3
-        $sOutput .= '"'.htmlspecialchars(stripslashes($reccord['login']), ENT_QUOTES).'"';
-
+        $sOutput .= '"'.htmlspecialchars(stripslashes($reccord['l.qui']), ENT_QUOTES).'",';
+        
+        //col4
+        $sOutput .= '"'.htmlspecialchars(stripslashes($reccord['u.login']), ENT_QUOTES).'",';
+        
         //Finish the line
         $sOutput .= '],';
     }
@@ -138,7 +141,7 @@ if (isset($_GET['action']) && $_GET['action'] == "connections") {
     } else {
         $sOutput .= '[] }';
     }
-    /* ERRORS LOG */
+    /* ERRORS LOG */ 
 } elseif (isset($_GET['action']) && $_GET['action'] == "errors") {
     //Columns name
     $aColumns = array('l.date', 'l.label', 'l.qui', 'u.login');
@@ -178,10 +181,10 @@ if (isset($_GET['action']) && $_GET['action'] == "connections") {
         }
         $sWhere = substr_replace($sWhere, "", -3).") ";
     }
-
-    $sql = "SELECT l.date as date, l.label as label, l.qui as who, u.login as login
-            FROM ".$pre."log_system as l
-            INNER JOIN ".$pre."users as u ON (l.qui=u.id)
+    
+    $sql = "SELECT l.date AS date, l.label AS label, l.qui AS who, u.login AS login
+            FROM ".$pre."log_system AS l
+            INNER JOIN ".$pre."users AS u ON (l.qui=u.id)
             $sWhere
             $sOrder
             $sLimit";
@@ -199,8 +202,8 @@ if (isset($_GET['action']) && $_GET['action'] == "connections") {
     /* Total data set length */
     $sql_c = "
             SELECT COUNT(*)
-            FROM ".$pre."log_system as l
-            INNER JOIN ".$pre."users as u ON (l.qui=u.id)
+            FROM ".$pre."log_system AS l
+            INNER JOIN ".$pre."users AS u ON (l.qui=u.id)
             WHERE l.type = 'error'
     ";
     $rResultTotal = mysql_query($sql_c) or die(mysql_error());
@@ -211,28 +214,28 @@ if (isset($_GET['action']) && $_GET['action'] == "connections") {
     $sOutput = '{';
     $sOutput .= '"sEcho": '.intval($_GET['sEcho']).', ';
     $sOutput .= '"iTotalRecords": '.$iTotal.', ';
-    $sOutput .= '"iTotalDisplayRecords": '.$iTotal.', ';
+    $sOutput .= '"iTotalDisplayRecords": '.$iFilteredTotal.', ';
     $sOutput .= '"aaData": ';
 
     $rows = $db->fetchAllArray($sql);
     if (count($rows) > 0) {
         $sOutput .= '[';
     }
-    foreach ($rows as $reccord) {
+    foreach ($rows AS $reccord) {
         $sOutput .= "[";
 
         //col1
-        $sOutput .= '"", ';
+        $sOutput .= '"'.$reccord['date'].'", ';
 
         //col2
         $sOutput .= '"'.htmlspecialchars(stripslashes($reccord['label']), ENT_QUOTES).'", ';
 
         //col3
         $sOutput .= '"'.htmlspecialchars(stripslashes($reccord['who']), ENT_QUOTES).'",';
-
+        
         //col4
-        $sOutput .= '"'.htmlspecialchars(stripslashes($reccord['login']), ENT_QUOTES).'"';
-
+        $sOutput .= '"'.htmlspecialchars(stripslashes($reccord['login']), ENT_QUOTES).'",';
+        
         //Finish the line
         $sOutput .= '],';
     }
@@ -246,7 +249,7 @@ if (isset($_GET['action']) && $_GET['action'] == "connections") {
     /* ACCESS LOG */
 } elseif (isset($_GET['action']) && $_GET['action'] == "access") {
     //Columns name
-    $aColumns = array('l.date', 'i.label', 'u.login');
+    $aColumns = array('l.date', 'l.label', 'u.login');
 
     //init SQL variables
     $sWhere = $sOrder = $sLimit = "";
@@ -283,11 +286,11 @@ if (isset($_GET['action']) && $_GET['action'] == "connections") {
         }
         $sWhere = substr_replace($sWhere, "", -3).") ";
     }
-
-    $sql = "SELECT l.date as date, u.login as login, i.label as label
-            FROM ".$pre."log_items as l
-            INNER JOIN ".$pre."items as i ON (l.id_item=i.id)
-            INNER JOIN ".$pre."users as u ON (l.id_user=u.id)
+    
+    $sql = "SELECT l.date AS date, u.login AS login, i.label AS label
+            FROM ".$pre."log_items AS l
+            INNER JOIN ".$pre."items AS i ON (l.id_item=i.id)
+            INNER JOIN ".$pre."users AS u ON (l.id_user=u.id)
             $sWhere
             $sOrder
             $sLimit";
@@ -304,11 +307,11 @@ if (isset($_GET['action']) && $_GET['action'] == "connections") {
 
     /* Total data set length */
     $sql_c = "
-            SELECT l.date as date, u.login as login, i.label as label
-            FROM ".$pre."log_items as l
-            INNER JOIN ".$pre."items as i ON (l.id_item=i.id)
-            INNER JOIN ".$pre."users as u ON (l.id_user=u.id)
-            $sWhere
+            SELECT COUNT(*)
+            FROM ".$pre."log_items AS l
+            INNER JOIN ".$pre."items AS i ON (l.id_item=i.id)
+            INNER JOIN ".$pre."users AS u ON (l.id_user=u.id)
+            WHERE l.action = 'at_shown'
     ";
     $rResultTotal = mysql_query($sql_c) or die(mysql_error());
     $aResultTotal = mysql_fetch_array($rResultTotal);
@@ -318,25 +321,25 @@ if (isset($_GET['action']) && $_GET['action'] == "connections") {
     $sOutput = '{';
     $sOutput .= '"sEcho": '.intval($_GET['sEcho']).', ';
     $sOutput .= '"iTotalRecords": '.$iTotal.', ';
-    $sOutput .= '"iTotalDisplayRecords": '.$iTotal.', ';
+    $sOutput .= '"iTotalDisplayRecords": '.$iFilteredTotal.', ';
     $sOutput .= '"aaData": ';
 
     $rows = $db->fetchAllArray($sql);
     if (count($rows) > 0) {
         $sOutput .= '[';
     }
-    foreach ($rows as $reccord) {
+    foreach ($rows AS $reccord) {
         $sOutput .= "[";
 
         //col1
         $sOutput .= '"'.date($_SESSION['settings']['date_format']." ".$_SESSION['settings']['time_format'], $reccord['date']).'", ';
 
         //col2
-        $sOutput .= '"'.htmlspecialchars(stripslashes($reccord['label']), ENT_QUOTES).'", ';
+        $sOutput .= '"'.htmlspecialchars(stripslashes($reccord['l.label']), ENT_QUOTES).'", ';
 
         //col3
-        $sOutput .= '"'.htmlspecialchars(stripslashes($reccord['login']), ENT_QUOTES).'"';
-
+        $sOutput .= '"'.htmlspecialchars(stripslashes($reccord['u.login']), ENT_QUOTES).'",';
+        
         //Finish the line
         $sOutput .= '],';
     }
@@ -387,11 +390,11 @@ if (isset($_GET['action']) && $_GET['action'] == "connections") {
         }
         $sWhere = substr_replace($sWhere, "", -3).") ";
     }
-
-    $sql = "SELECT l.date as date, u.login as login, i.label as label
-            FROM ".$pre."log_items as l
-            INNER JOIN ".$pre."items as i ON (l.id_item=i.id)
-            INNER JOIN ".$pre."users as u ON (l.id_user=u.id)
+    
+    $sql = "SELECT l.date AS date, u.login AS login, i.label AS label
+            FROM ".$pre."log_items AS l
+            INNER JOIN ".$pre."items AS i ON (l.id_item=i.id)
+            INNER JOIN ".$pre."users AS u ON (l.id_user=u.id)
             $sWhere
             $sOrder
             $sLimit";
@@ -409,9 +412,9 @@ if (isset($_GET['action']) && $_GET['action'] == "connections") {
     /* Total data set length */
     $sql_c = "
             SELECT COUNT(*)
-            FROM ".$pre."log_items as l
-            INNER JOIN ".$pre."items as i ON (l.id_item=i.id)
-            INNER JOIN ".$pre."users as u ON (l.id_user=u.id)
+            FROM ".$pre."log_items AS l
+            INNER JOIN ".$pre."items AS i ON (l.id_item=i.id)
+            INNER JOIN ".$pre."users AS u ON (l.id_user=u.id)
             WHERE l.action = 'at_copy'
     ";
     $rResultTotal = mysql_query($sql_c) or die(mysql_error());
@@ -422,25 +425,25 @@ if (isset($_GET['action']) && $_GET['action'] == "connections") {
     $sOutput = '{';
     $sOutput .= '"sEcho": '.intval($_GET['sEcho']).', ';
     $sOutput .= '"iTotalRecords": '.$iTotal.', ';
-    $sOutput .= '"iTotalDisplayRecords": '.$iTotal.', ';
+    $sOutput .= '"iTotalDisplayRecords": '.$iFilteredTotal.', ';
     $sOutput .= '"aaData": ';
 
     $rows = $db->fetchAllArray($sql);
     if (count($rows) > 0) {
         $sOutput .= '[';
     }
-    foreach ($rows as $reccord) {
+    foreach ($rows AS $reccord) {
         $sOutput .= "[";
 
         //col1
         $sOutput .= '"'.date($_SESSION['settings']['date_format']." ".$_SESSION['settings']['time_format'], $reccord['date']).'", ';
 
         //col2
-        $sOutput .= '"'.htmlspecialchars(stripslashes($reccord['label']), ENT_QUOTES).'", ';
+        $sOutput .= '"'.htmlspecialchars(stripslashes($reccord['l.label']), ENT_QUOTES).'", ';
 
         //col3
-        $sOutput .= '"'.htmlspecialchars(stripslashes($reccord['login']), ENT_QUOTES).'"';
-
+        $sOutput .= '"'.htmlspecialchars(stripslashes($reccord['u.login']), ENT_QUOTES).'",';
+        
         //Finish the line
         $sOutput .= '],';
     }
@@ -451,115 +454,9 @@ if (isset($_GET['action']) && $_GET['action'] == "connections") {
     } else {
         $sOutput .= '[] }';
     }
-    /*
-     * ADMIN LOG
-     **/
+    /* ADMIN LOG */
 } elseif (isset($_GET['action']) && $_GET['action'] == "admin") {
-    //Columns name
-    $aColumns = array('l.date', 'u.login', 'l.label');
-
-    //init SQL variables
-    $sOrder = $sLimit = "";
-
-    /* BUILD QUERY */
-    //Paging
-    $sLimit = "";
-    if (isset($_GET['iDisplayStart']) && $_GET['iDisplayLength'] != '-1') {
-        $sLimit = "LIMIT ". $_GET['iDisplayStart'] .", ". $_GET['iDisplayLength'] ;
-    }
-
-    //Ordering
-
-    if (isset($_GET['iSortCol_0'])) {
-        $sOrder = "ORDER BY  ";
-        for ($i=0; $i<intval($_GET['iSortingCols']); $i++) {
-            if ($_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true") {
-                $sOrder .= $aColumns[ intval($_GET['iSortCol_'.$i]) ]."
-                ".mysql_real_escape_string($_GET['sSortDir_'.$i]) .", ";
-            }
-        }
-
-        $sOrder = substr_replace($sOrder, "", -2);
-        if ($sOrder == "ORDER BY") {
-            $sOrder = "";
-        }
-    }
-
-    /*
-     * Filtering
-    */
-    $sWhere = "WHERE l.type = 'admin_action'";
-    if ($_GET['sSearch'] != "") {
-        $sWhere .= " AND (";
-        for ($i=0; $i<count($aColumns); $i++) {
-            $sWhere .= $aColumns[$i]." LIKE '%".mysql_real_escape_string($_GET['sSearch'])."%' OR ";
-        }
-        $sWhere = substr_replace($sWhere, "", -3);
-        $sWhere .= ") ";
-    }
-
-    $sql = "SELECT l.date as date, u.login as login, l.label as label
-            FROM ".$pre."log_system as l
-            INNER JOIN ".$pre."users as u ON (l.qui=u.id)
-            $sWhere
-            $sOrder
-            $sLimit";
-
-    $rResult = mysql_query($sql) or die(mysql_error()." ; ".$sql);
-
-    /* Data set length after filtering */
-    $sql_f = "
-            SELECT FOUND_ROWS()
-    ";
-    $rResultFilterTotal = mysql_query($sql_f) or die(mysql_error());
-    $aResultFilterTotal = mysql_fetch_array($rResultFilterTotal);
-    $iFilteredTotal = $aResultFilterTotal[0];
-
-    /* Total data set length */
-    $sql_c = "
-            SELECT COUNT(*)
-            FROM ".$pre."log_system as l
-            INNER JOIN ".$pre."users as u ON (l.qui=u.id)
-            $sWhere
-    ";
-    $rResultTotal = mysql_query($sql_c) or die(mysql_error());
-    $aResultTotal = mysql_fetch_array($rResultTotal);
-    $iTotal = $aResultTotal[0];
-
-    /*
-     * Output
-    */
-    $sOutput = '{';
-    $sOutput .= '"sEcho": '.intval($_GET['sEcho']).', ';
-    $sOutput .= '"iTotalRecords": '.$iTotal.', ';
-    $sOutput .= '"iTotalDisplayRecords": '.$iTotal.', ';
-    $sOutput .= '"aaData": [ ';
-
-    $rows = $db->fetchAllArray($sql);
-    foreach ($rows as $reccord) {
-        $get_item_in_list = true;
-        $sOutput_item = "[";
-
-        //col1
-        $sOutput_item .= '"'.date($_SESSION['settings']['date_format']." ".$_SESSION['settings']['time_format'], $reccord['date']).'", ';
-
-        //col2
-        $sOutput_item .= '"'.htmlspecialchars(stripslashes($reccord['login']), ENT_QUOTES).'", ';
-
-        //col3
-        $sOutput_item .= '"'.htmlspecialchars(stripslashes($reccord['label']), ENT_QUOTES).'", ';
-
-        //Finish the line
-        $sOutput_item .= '], ';
-
-        if ($get_item_in_list == true) {
-            $sOutput .= $sOutput_item;
-        }
-    }
-    if ($iFilteredTotal > 0) {
-        $sOutput = substr_replace($sOutput, "", -2);
-    }
-    $sOutput .= '] }';
+    
 } elseif (isset($_GET['action']) && $_GET['action'] == "items") {
     //Columns name
     $aColumns = array('l.date', 'u.login', 'i.label', 'i.perso');
@@ -604,11 +501,11 @@ if (isset($_GET['action']) && $_GET['action'] == "connections") {
         $sWhere .= ") ";
     }
 
-    $sql = "SELECT l.date as date, u.login as login, i.label as label,
-            i.perso as perso
-            FROM ".$pre."log_items as l
-            INNER JOIN ".$pre."items as i ON (l.id_item=i.id)
-            INNER JOIN ".$pre."users as u ON (l.id_user=u.id)
+    $sql = "SELECT l.date AS date, u.login AS login, i.label AS label,
+            i.perso AS perso
+            FROM ".$pre."log_items AS l
+            INNER JOIN ".$pre."items AS i ON (l.id_item=i.id)
+            INNER JOIN ".$pre."users AS u ON (l.id_user=u.id)
             $sWhere
             $sOrder
             $sLimit";
@@ -625,10 +522,10 @@ if (isset($_GET['action']) && $_GET['action'] == "connections") {
 
     /* Total data set length */
     $sql_c = "
-            SELECT COUNT(*)
-            FROM ".$pre."log_items as l
-            INNER JOIN ".$pre."items as i ON (l.id_item=i.id)
-            INNER JOIN ".$pre."users as u ON (l.id_user=u.id)
+            SELECT COUNT(i.label)
+            FROM ".$pre."log_items AS l
+            INNER JOIN ".$pre."items AS i ON (l.id_item=i.id)
+            INNER JOIN ".$pre."users AS u ON (l.id_user=u.id)
     ";
     $rResultTotal = mysql_query($sql_c) or die(mysql_error());
     $aResultTotal = mysql_fetch_array($rResultTotal);
@@ -640,11 +537,11 @@ if (isset($_GET['action']) && $_GET['action'] == "connections") {
     $sOutput = '{';
     $sOutput .= '"sEcho": '.intval($_GET['sEcho']).', ';
     $sOutput .= '"iTotalRecords": '.$iTotal.', ';
-    $sOutput .= '"iTotalDisplayRecords": '.$iTotal.', ';
+    $sOutput .= '"iTotalDisplayRecords": '.$iFilteredTotal.', ';
     $sOutput .= '"aaData": [ ';
 
     $rows = $db->fetchAllArray($sql);
-    foreach ($rows as $reccord) {
+    foreach ($rows AS $reccord) {
         $get_item_in_list = true;
         $sOutput_item = "[";
 
@@ -658,11 +555,8 @@ if (isset($_GET['action']) && $_GET['action'] == "connections") {
         $sOutput_item .= '"'.htmlspecialchars(stripslashes($reccord['label']), ENT_QUOTES).'", ';
 
         //col4
-        if ($reccord['perso'] == 1) {
-            $sOutput_item .= '"'. htmlspecialchars(stripslashes($txt['yes']), ENT_QUOTES). '"';
-        } else {
-            $sOutput_item .= '"'. htmlspecialchars(stripslashes($txt['no']), ENT_QUOTES). '"';
-        }
+        $sOutput_item .= '"'.htmlspecialchars(stripslashes($reccord['perso']), ENT_QUOTES).'"';
+
 
         //Finish the line
         $sOutput_item .= '], ';
