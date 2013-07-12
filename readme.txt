@@ -82,6 +82,7 @@ folder
  #318 - Upgrade process badly creates sk.php file
  #348 - Fix for undefined index "isAdministratedByRole"
  #350 - Fix for Lock and delete user actions don't refresh page
+ * Fix for no possibility to update a Role 
 
 2.1.17
  * New exchange encryption protocol. No key is visible. The channel is 
